@@ -1,64 +1,64 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
-import { Appbar, Chip } from 'react-native-paper';
+import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import { Appbar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-// Placeholder data for installed apps (replace with actual data if available)
-const installedApps = [
-  { id: '1', name: 'WhatsApp' },
-  { id: '2', name: 'Instagram' },
-  { id: '3', name: 'Facebook' },
+const apps = [
+  { name: "1.1.1.1", icon: "https://placehold.co/100x100?text=1.1.1.1" },
+  { name: "AdAway", icon: "https://placehold.co/100x100?text=AdAway" },
+  { name: "Al-Azan", icon: "https://placehold.co/100x100?text=Al-Azan" },
+  { name: "Android Acc...", icon: "https://placehold.co/100x100?text=Android+Acc..." },
+  { name: "Android Auto", icon: "https://placehold.co/100x100?text=Android+Auto" },
+  { name: "Android Sys...", icon: "https://placehold.co/100x100?text=Android+Sys..." },
+  { name: "Authenticator", icon: "https://placehold.co/100x100?text=Authenticator" },
+  { name: "Authy", icon: "https://placehold.co/100x100?text=Authy" },
 ];
 
 const SendScreen: React.FC = () => {
   const navigation = useNavigation();
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [items, setItems] = useState<string[]>([]);
-
-  const categories = ['App', 'Photo', 'Video', 'Audio', 'Search'];
-
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
-    if (category === 'App') {
-      setItems(installedApps.map(app => app.name));
-    } else {
-      setItems([]);
-    }
-  };
 
   return (
     <View style={styles.container}>
-      <Appbar.Header style={styles.appbar}>
-        <Appbar.BackAction onPress={() => navigation.navigate('Home')} />
-        <Appbar.Content title="Send" />
+      <Appbar.Header style={styles.header}>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content title="Select files to send" />
       </Appbar.Header>
-      <Text style={styles.title}>Select Category</Text>
-      <View style={styles.chipsContainer}>
-        {categories.map(category => (
-          <Chip
-            key={category}
-            selected={selectedCategory === category}
-            onPress={() => handleCategorySelect(category)}
-            style={styles.chip}
-          >
-            {category}
-          </Chip>
-        ))}
-      </View>
-      {selectedCategory && (
-        <View style={styles.listContainer}>
-          <Text style={styles.subtitle}>Select Item to Share</Text>
-          <FlatList
-            data={items}
-            renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
-            keyExtractor={(item, index) => index.toString()}
-          />
-          <Button
-            title="Send"
-            onPress={() => navigation.navigate('ScanQRCode')}
-          />
+      <View style={styles.iconRow}>
+        <View style={styles.iconColumn}>
+          <Text style={styles.icon}><i className="fas fa-th-large"></i></Text>
+          <Text style={styles.iconText}>App</Text>
         </View>
-      )}
+        <View style={styles.iconColumn}>
+          <Text style={styles.icon}><i className="fas fa-image"></i></Text>
+          <Text style={styles.iconText}>Photo</Text>
+        </View>
+        <View style={styles.iconColumn}>
+          <Text style={styles.icon}><i className="fas fa-video"></i></Text>
+          <Text style={styles.iconText}>Video</Text>
+        </View>
+        <View style={styles.iconColumn}>
+          <Text style={styles.icon}><i className="fas fa-music"></i></Text>
+          <Text style={styles.iconText}>Audio</Text>
+        </View>
+        <View style={styles.iconColumn}>
+          <Text style={styles.icon}><i className="fas fa-search"></i></Text>
+          <Text style={styles.iconText}>Search</Text>
+        </View>
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.sectionTitle}>Local App(99)</Text>
+        <FlatList
+          data={apps}
+          renderItem={({ item }) => (
+            <View style={styles.appItem}>
+              <Image source={{ uri: item.icon }} style={styles.appIcon} />
+              <Text style={styles.appName}>{item.name}</Text>
+            </View>
+          )}
+          keyExtractor={(item) => item.name}
+          numColumns={4}
+        />
+      </View>
     </View>
   );
 };
@@ -66,38 +66,52 @@ const SendScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
   },
-  appbar: {
-    backgroundColor: 'black', // Full black bar background
+  header: {
+    backgroundColor: '#14b8a6',
   },
-  title: {
-    fontSize: 24,
-    margin: 20,
-  },
-  chipsContainer: {
+  iconRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginVertical: 10,
+    justifyContent: 'space-around',
+    backgroundColor: '#f3f3f3',
+    paddingVertical: 10,
   },
-  chip: {
-    margin: 5,
-  },
-  listContainer: {
+  iconColumn: {
     flex: 1,
-    width: '100%',
+    alignItems: 'center',
+  },
+  icon: {
+    fontSize: 24,
+    color: '#888',
+  },
+  iconText: {
+    fontSize: 12,
+    color: '#888',
+  },
+  content: {
     padding: 20,
   },
-  subtitle: {
+  sectionTitle: {
     fontSize: 18,
+    fontWeight: 'bold',
     marginBottom: 10,
   },
-  item: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+  appItem: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 10,
+  },
+  appIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+  },
+  appName: {
+    marginTop: 5,
+    textAlign: 'center',
+    fontSize: 12,
+    color: '#333',
   },
 });
 

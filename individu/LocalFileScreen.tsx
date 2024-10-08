@@ -1,60 +1,57 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
-import { Appbar, Chip } from 'react-native-paper';
-import { Props } from './types';
+import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
+import { Appbar } from 'react-native-paper';
 
-// Placeholder data for local files
-const localFiles = [
-  { id: '1', name: 'photo1.jpg' },
-  { id: '2', name: 'document.pdf' },
-  { id: '3', name: 'music.mp3' },
-];
-
-const LocalFileScreen: React.FC<Props> = ({ navigation }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [items, setItems] = useState<string[]>([]);
-
-  const categories = ['App', 'Photo', 'Video', 'Audio', 'Search'];
-
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
-    // For LocalFile screen, we're just using the placeholder data
-    setItems(localFiles.map(file => file.name));
-  };
+const LocalFileScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   return (
     <View style={styles.container}>
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.navigate('Home')} />
+      <Appbar.Header style={styles.header}>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Local File" />
       </Appbar.Header>
-      <Text style={styles.title}>Select Category</Text>
-      <View style={styles.chipsContainer}>
-        {categories.map(category => (
-          <Chip
-            key={category}
-            selected={selectedCategory === category}
-            onPress={() => handleCategorySelect(category)}
-            style={styles.chip}
-          >
-            {category}
-          </Chip>
-        ))}
+      <View style={styles.iconRow}>
+        <Text style={styles.icon}><i className="fas fa-th-large"></i></Text>
+        <Text style={styles.icon}><i className="fas fa-image"></i></Text>
+        <Text style={styles.icon}><i className="fas fa-video"></i></Text>
+        <Text style={styles.icon}><i className="fas fa-music"></i></Text>
+        <Text style={[styles.icon, styles.activeIcon]}><i className="fas fa-folder"></i></Text>
       </View>
-      {selectedCategory && (
-        <View style={styles.listContainer}>
-          <Text style={styles.subtitle}>Select Item to Share</Text>
-          <FlatList
-            data={items}
-            renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
-            keyExtractor={(item, index) => index.toString()}
-          />
-          <Button
-            title="Send"
-            onPress={() => navigation.navigate('ScanQRCode')}
-          />
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+        <Text style={styles.searchIcon}><i className="fas fa-search"></i></Text>
+      </View>
+      <ScrollView>
+        <View style={styles.fileInfo}>
+          <View style={styles.fileItem}>
+            <Text style={styles.fileIcon}><i className="fas fa-folder"></i></Text>
+            <View style={styles.fileDetails}>
+              <Text style={styles.fileText}>All Files</Text>
+              <Text style={styles.fileSize}>Available 82.12GB / 168GB</Text>
+            </View>
+          </View>
+          <View style={styles.fileItem}>
+            <Text style={styles.fileIcon}><i className="fas fa-file-alt"></i></Text>
+            <View style={styles.fileDetails}>
+              <Text style={styles.fileText}>Document</Text>
+              <Text style={styles.fileSize}>0</Text>
+            </View>
+          </View>
+          <View style={styles.fileItem}>
+            <Text style={styles.fileIcon}><i className="fas fa-file"></i></Text>
+            <View style={styles.fileDetails}>
+              <Text style={styles.fileText}>Large Files</Text>
+              <Text style={styles.fileSize}>64</Text>
+            </View>
+          </View>
         </View>
-      )}
+      </ScrollView>
     </View>
   );
 };
@@ -62,35 +59,67 @@ const LocalFileScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
   },
-  title: {
-    fontSize: 24,
-    margin: 20,
+  header: {
+    backgroundColor: '#14b8a6',
   },
-  chipsContainer: {
+  iconRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginVertical: 10,
+    justifyContent: 'space-around',
+    backgroundColor: '#f3f3f3',
+    paddingVertical: 10,
   },
-  chip: {
-    margin: 5,
+  icon: {
+    fontSize: 24,
+    color: '#888',
   },
-  listContainer: {
+  activeIcon: {
+    color: '#14b8a6',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+  searchInput: {
     flex: 1,
-    width: '100%',
+    padding: 10,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  searchIcon: {
+    marginLeft: 10,
+    fontSize: 24,
+    color: '#888',
+  },
+  fileInfo: {
     padding: 20,
   },
-  subtitle: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  item: {
-    padding: 10,
+  fileItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: '#ddd',
+  },
+  fileIcon: {
+    fontSize: 30,
+    color: '#14b8a6',
+    marginRight: 10,
+  },
+  fileDetails: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  fileText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  fileSize: {
+    color: '#888',
+    fontSize: 14,
   },
 });
 

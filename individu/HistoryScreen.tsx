@@ -1,34 +1,41 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { Appbar, List } from 'react-native-paper';
+import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import { Appbar } from 'react-native-paper';
 
-// Sample data for history items
 const historyItems = [
-  { id: '1', name: 'photo1.jpg', date: '2024-10-01' },
-  { id: '2', name: 'document.pdf', date: '2024-10-02' },
-  { id: '3', name: 'music.mp3', date: '2024-10-03' },
+  { id: '1', name: 'PXL_20240928_163651270.mp4', date: '2024-09-28', recipient: 'GamePast', size: '13GB' },
+  { id: '2', name: '0908241421.mp4', date: '2024-09-12', recipient: 'GamePast', size: '31MB' },
 ];
 
 const HistoryScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.navigate('Home')} />
+      <Appbar.Header style={styles.header}>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="History" />
       </Appbar.Header>
-      <Text style={styles.title}>Received Items</Text>
-      <FlatList
-        data={historyItems}
-        renderItem={({ item }) => (
-          <List.Item
-            title={item.name}
-            description={`Received on ${item.date}`}
-            left={props => <List.Icon {...props} icon="file" />}
-          />
-        )}
-        keyExtractor={item => item.id}
-        style={styles.list}
-      />
+      <View style={styles.content}>
+        <FlatList
+          data={historyItems}
+          renderItem={({ item }) => (
+            <View style={styles.historyItem}>
+              <View style={styles.historyItemHeader}>
+                <Text style={styles.date}>{item.date}</Text>
+                <Text style={styles.recipient}>Sent to: {item.recipient}</Text>
+              </View>
+              <View style={styles.historyItemContent}>
+                <Image source={{ uri: 'https://placehold.co/50x50' }} style={styles.thumbnail} />
+                <View>
+                  <Text style={styles.fileName}>{item.name}</Text>
+                  <Text style={styles.status}>Transfer complete</Text>
+                  <Text style={styles.size}>{item.size}</Text>
+                </View>
+              </View>
+            </View>
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
     </View>
   );
 };
@@ -36,15 +43,53 @@ const HistoryScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f3f3f3',
   },
-  title: {
-    fontSize: 24,
-    margin: 20,
-    textAlign: 'center',
+  header: {
+    backgroundColor: '#14b8a6',
   },
-  list: {
-    marginHorizontal: 20,
+  content: {
+    padding: 10,
+  },
+  historyItem: {
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 5,
+  },
+  historyItemHeader: {
+    marginBottom: 10,
+  },
+  date: {
+    color: '#14b8a6',
+  },
+  recipient: {
+    color: '#14b8a6',
+    fontWeight: 'bold',
+  },
+  historyItemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  thumbnail: {
+    width: 50,
+    height: 50,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+  fileName: {
+    color: '#333',
+  },
+  status: {
+    color: '#14b8a6',
+  },
+  size: {
+    color: '#888',
   },
 });
 

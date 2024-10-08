@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
 const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
@@ -10,15 +10,36 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Appbar.Header style={styles.appbar}>
-        <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
+      <Appbar.Header style={styles.header}>
         <Appbar.Content title="Zapya Go" />
+        <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
       </Appbar.Header>
-      <Text style={styles.title}>Welcome to Zapya Go!</Text>
-      <Button title="Send" onPress={() => handlePress('Send')} />
-      <Button title="Receive" onPress={() => handlePress('Receive')} />
-      <Button title="History" onPress={() => handlePress('History')} />
-      <Button title="Local File" onPress={() => handlePress('LocalFile')} />
+      <View style={styles.main}>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity onPress={() => handlePress('Send')}>
+            <View style={styles.iconCircle}>
+              <Text style={styles.iconText}>➡️</Text>
+            </View>
+            <Text style={styles.iconLabel}>Send</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handlePress('Receive')}>
+            <View style={styles.iconCircle}>
+              <Text style={styles.iconText}>⬅️</Text>
+            </View>
+            <Text style={styles.iconLabel}>Receive</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.section}>
+          <TouchableOpacity style={styles.sectionItem} onPress={() => handlePress('History')}>
+            <Text style={styles.sectionIcon}>📜</Text>
+            <Text style={styles.sectionLabel}>History</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.sectionItem} onPress={() => handlePress('LocalFile')}>
+            <Text style={styles.sectionIcon}>📁</Text>
+            <Text style={styles.sectionLabel}>Local File</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
@@ -26,16 +47,54 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    backgroundColor: '#38b2ac',
+  },
+  header: {
+    backgroundColor: '#38b2ac',
+  },
+  main: {
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  appbar: {
-    backgroundColor: 'black', // Full black bar background
+  iconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginVertical: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    margin: 20,
+  iconCircle: {
+    backgroundColor: '#fff',
+    borderRadius: 50,
+    padding: 20,
+  },
+  iconText: {
+    fontSize: 50,
+    color: '#38b2ac',
+  },
+  iconLabel: {
+    color: '#fff',
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  section: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    backgroundColor: '#319795',
+    padding: 20,
+    marginTop: 20,
+  },
+  sectionItem: {
+    alignItems: 'center',
+  },
+  sectionIcon: {
+    color: '#fff',
+    fontSize: 30,
+  },
+  sectionLabel: {
+    color: '#fff',
+    marginTop: 5,
   },
 });
 
